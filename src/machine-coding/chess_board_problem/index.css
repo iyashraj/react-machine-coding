@@ -1,0 +1,10 @@
+.grid-generator{
+    display: flex;
+    border: 1px solid red;
+    width: 800px;
+    height: 800px;
+    flex-wrap: wrap;   
+}
+.grid-item:hover{
+background-color: red !important;
+}
