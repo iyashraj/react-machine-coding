@@ -5,32 +5,51 @@ const ChessBoard = ({number = 4}) => {
     const iteratableElem = Array(number ** 2).fill('0')
     const [cordinate, setCordinate] = useState([0,0])
     const handleCoordinates = (index) => {
-        let row = 0, coloum = 0
-        if(index < number){
-            row = 0
-            coloum = index
-        }else{
-            console.log(index)
-            row = Math.floor((index) / number)
-            coloum = index - number * row
-        }
+        const row = Math.floor((index) / number)
+        const coloum = index - number * row
         setCordinate([row, coloum])
-        // console.log('row '+ row + "---", 'column '+ coloum)
     }
-    console.log(cordinate)
 
     const handleButton = (selectorKey) => {
-
+        const [row, column] = cordinate
+        const currentIndex = row * number + column
+        let newRow = row
+        let newColumn = column
+        switch (selectorKey) {
+            case "Up":
+                if(row > 0) newRow = newRow - 1
+                setCordinate([newRow, newColumn]);
+                break;
+            case "Down":
+                if(row < number -1 ) newRow = newRow + 1
+                setCordinate([newRow, newColumn]);
+                break;
+            case "Left":
+                if(currentIndex > 0) handleCoordinates(currentIndex - 1)
+                break;
+            case "Right":
+                if(currentIndex < iteratableElem.length-1) handleCoordinates(currentIndex + 1)
+                break;
+            default:
+                handleCoordinates(0)
+                break;
+        }
     }
 
   return (
     <>
     <div>ChessBoard</div>
-    <div className='grid-generator'>
-        {iteratableElem.map((item, index)=>{
-            return <div className='grid-item' onClick={()=> handleCoordinates(index)} style={{border: "1px solid red", width:`${100/number - 0.2}%`, backgroundColor: (cordinate[0] * number + cordinate[1]) === index ? "yellow" : 'gray'}}></div>
+    <div className="grid-generator" style={{ gridTemplateColumns: `repeat(${number}, 1fr)` }}>
+        {iteratableElem.map((_, index) => {
+            return (<div
+                key={index}
+                className={`grid-item ${(cordinate[0] * number + cordinate[1]) === index ? 'active' : ''}`}
+                onClick={() => handleCoordinates(index)}
+            >
+                {(cordinate[0] * number + cordinate[1]) === index ? `Coordinates : ${JSON.stringify(cordinate)}` : ""}
+            </div>)
         })}
-    </div>
+            </div>
     <div style={{margin: "3% 0", display:"flex", justifyContent:"center", gap:"10px"}}>
         <button onClick={()=> handleButton("Up")}>Up</button>
         <button onClick={()=> handleButton("Down")}>Down</button>
